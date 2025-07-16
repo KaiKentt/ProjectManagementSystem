@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Project - Project Management System</title>
+    <!-- Question 3a: Link CSS file to EJS template -->
+    <link rel="stylesheet" href="/app.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>➕ Add New Project</h1>
+
+        <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/projects">📊 View Projects</a>
+        </nav>
+
+        <!-- Display error message if exists -->
+        <% if (typeof error !=='undefined' && error) { %>
+            <div class="error">
+                ⚠️ <%= error %>
+            </div>
+            <% } %>
+
+                <!-- Question 2d: Form for adding new project using POST method -->
+                <form action="/projects" method="POST" id="projectForm">
+                    <h2>📋 Project Information</h2>
+
+                    <div class="form-group">
+                        <label for="title">🏷️ Project Title *</label>
+                        <input type="text" id="title" name="title" required placeholder="Enter project title">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="objective">🎯 Project Objective *</label>
+                        <textarea id="objective" name="objective" required
+                            placeholder="Describe the main objective of this project"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="scope">📐 Project Scope *</label>
+                        <textarea id="scope" name="scope" required
+                            placeholder="Define the scope and boundaries of this project"></textarea>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                        <div class="form-group">
+                            <label for="duration">⏱️ Duration (months) *</label>
+                            <input type="number" id="duration" name="duration" min="1" step="1" required
+                                placeholder="e.g., 12">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="budget">💰 Budget (RM) *</label>
+                            <input type="number" id="budget" name="budget" min="0" step="0.01" required
+                                placeholder="e.g., 50000">
+                        </div>
+                    </div>
+
+                    <h2>⚖️ Evaluation Criteria (Score: 1-10)</h2>
+                    <p style="margin-bottom: 20px; color: #7f8c8d; text-align: center;">
+                        Rate each criterion from 1 (lowest) to 10 (highest) based on your project assessment.
+                    </p>
+
+                    <div class="criteria-grid">
+                        <div class="criteria-item">
+                            <label for="competition">🏆 Competition</label>
+                            <small>Weight: 0.1 - Rate the market competition level</small>
+                            <input type="number" id="competition" name="competition" min="1" max="10" required
+                                placeholder="1-10">
+                        </div>
+
+                        <div class="criteria-item">
+                            <label for="potentialRevenue">💰 Potential Revenue</label>
+                            <small>Weight: 0.3 - Rate the expected financial returns</small>
+                            <input type="number" id="potentialRevenue" name="potentialRevenue" min="1" max="10" required
+                                placeholder="1-10">
+                        </div>
+
+                        <div class="criteria-item">
+                            <label for="cost">💸 Cost</label>
+                            <small>Weight: 0.2 - Rate the project implementation cost</small>
+                            <input type="number" id="cost" name="cost" min="1" max="10" required placeholder="1-10">
+                        </div>
+
+                        <div class="criteria-item">
+                            <label for="customerValue">❤️ Customer Value</label>
+                            <small>Weight: 0.4 - Rate the value delivered to customers</small>
+                            <input type="number" id="customerValue" name="customerValue" min="1" max="10" required
+                                placeholder="1-10">
+                        </div>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 10px;">📊 Score Preview</h3>
+                        <p style="color: #7f8c8d; margin-bottom: 10px;">
+                            Your weighted score will be calculated as:
+                        </p>
+                        <div
+                            style="background: white; padding: 15px; border-radius: 8px; font-family: monospace; text-align: center;">
+                            <strong>Score = (Competition × 0.1) + (Revenue × 0.3) + (Cost × 0.2) + (Customer Value ×
+                                0.4)</strong>
+                        </div>
+                        <div id="scorePreview"
+                            style="margin-top: 10px; font-size: 1.1em; text-align: center; font-weight: bold;"></div>
+                    </div>
+
+                    <div style="text-align: center;">
+                        <button type="submit">🚀 Create Project</button>
+                    </div>
+                </form>
+    </div>
+
+    <!-- Question 2d: JavaScript code for form functionality -->
+    <script>
+        // Real-time score calculation
+        function calculateScore() {
+            const competition = parseFloat(document.getElementById('competition').value) || 0;
+            const potentialRevenue = parseFloat(document.getElementById('potentialRevenue').value) || 0;
+            const cost = parseFloat(document.getElementById('cost').value) || 0;
+            const customerValue = parseFloat(document.getElementById('customerValue').value) || 0;
+
+            const score = (competition * 0.1) + (potentialRevenue * 0.3) + (cost * 0.2) + (customerValue * 0.4);
+
+            const scorePreview = document.getElementById('scorePreview');
+            if (score > 0) {
+                scorePreview.innerHTML = `Estimated Score: <span style="color: ${score >= 8 ? '#27ae60' : score >= 6 ? '#f39c12' : '#e74c3c'}">${score.toFixed(1)}</span>`;
+            } else {
+                scorePreview.innerHTML = 'Fill in all criteria to see score preview';
+            }
+        }
+
+        // Add event listeners for real-time calculation
+        document.addEventListener('DOMContentLoaded', function () {
+            const criteriaInputs = ['competition', 'potentialRevenue', 'cost', 'customerValue'];
+
+            criteriaInputs.forEach(id => {
+                const input = document.getElementById(id);
+                input.addEventListener('input', calculateScore);
+                input.addEventListener('change', calculateScore);
+            });
+
+            // Form validation
+            document.getElementById('projectForm').addEventListener('submit', function (e) {
+                const requiredFields = ['title', 'objective', 'scope', 'duration', 'budget'];
+                const criteriaFields = ['competition', 'potentialRevenue', 'cost', 'customerValue'];
+
+                // Check required fields
+                for (let field of requiredFields) {
+                    const input = document.getElementById(field);
+                    if (!input.value.trim()) {
+                        e.preventDefault();
+                        alert(`Please fill in the ${field} field.`);
+                        input.focus();
+                        return;
+                    }
+                }
+
+                // Check criteria scores
+                for (let field of criteriaFields) {
+                    const input = document.getElementById(field);
+                    const value = parseFloat(input.value);
+                    if (isNaN(value) || value < 1 || value > 10) {
+                        e.preventDefault();
+                        alert(`Please enter a valid score (1-10) for ${field}.`);
+                        input.focus();
+                        return;
+                    }
+                }
+
+                // Show loading state
+                const submitBtn = document.querySelector('button[type="submit"]');
+                submitBtn.innerHTML = '⏳ Creating Project...';
+                submitBtn.disabled = true;
+            });
+
+            // Add input validation and styling
+            const numberInputs = document.querySelectorAll('input[type="number"]');
+            numberInputs.forEach(input => {
+                input.addEventListener('input', function () {
+                    if (this.min && this.max) {
+                        const value = parseFloat(this.value);
+                        if (value < parseFloat(this.min) || value > parseFloat(this.max)) {
+                            this.style.borderColor = '#e74c3c';
+                        } else {
+                            this.style.borderColor = '#27ae60';
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Management System</title>
+    <!-- Question 3a: Link CSS file to EJS template -->
+    <link rel="stylesheet" href="/app.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>🚀 Project Management System</h1>
+
+        <div style="text-align: center; margin-bottom: 30px;">
+            <p style="font-size: 1.2em; color: #7f8c8d;">
+                Welcome to the Project Management System! Use weighted scoring method to evaluate and select the best
+                projects for your company.
+            </p>
+        </div>
+
+        <!-- Question 2d: Navigation links -->
+        <nav class="nav-links">
+            <a href="/projects">📊 View Projects</a>
+            <a href="/projects/new">➕ Add New Project</a>
+        </nav>
+
+        <div
+            style="background: white; padding: 30px; border-radius: 15px; margin-top: 30px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+            <h2>📈 About Weighted Scoring Method</h2>
+            <p style="margin-bottom: 15px;">
+                The weighted scoring method helps you evaluate projects objectively based on four key criteria:
+            </p>
+
+            <div class="criteria-grid">
+                <div class="criteria-item">
+                    <strong>🏆 Competition (Weight: 0.1)</strong>
+                    <p>Market competition level</p>
+                </div>
+                <div class="criteria-item">
+                    <strong>💰 Potential Revenue (Weight: 0.3)</strong>
+                    <p>Expected financial returns</p>
+                </div>
+                <div class="criteria-item">
+                    <strong>💸 Cost (Weight: 0.2)</strong>
+                    <p>Project implementation cost</p>
+                </div>
+                <div class="criteria-item">
+                    <strong>❤️ Customer Value (Weight: 0.4)</strong>
+                    <p>Value delivered to customers</p>
+                </div>
+            </div>
+
+            <p style="text-align: center; font-style: italic; color: #7f8c8d;">
+                Each criterion is scored from 1-10, then multiplied by its weight to calculate the final project score.
+            </p>
+        </div>
+    </div>
+</body>
+
+</html>

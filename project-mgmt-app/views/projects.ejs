@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects List - Project Management System</title>
+    <link rel="stylesheet" href="/app.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Project Rankings</h1>
+
+        <nav class="nav-links">
+            <a href="/">🏠 Home</a>
+            <a href="/projects/new">➕ Add New Project</a>
+        </nav>
+
+        <!-- Question 2d -->
+        <% if (projects && projects.length> 0) { %>
+            <div
+                style="background: white; padding: 20px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+                <h2>🏆 Project Rankings (Sorted by Weighted Score)</h2>
+                <p style="margin-bottom: 20px; color: #7f8c8d;">
+                    Projects are ranked from highest to lowest weighted score based on the evaluation criteria.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Project Title</th>
+                            <th>Objective</th>
+                            <th>Scope</th>
+                            <th>Duration (months)</th>
+                            <th>Budget (RM)</th>
+                            <th>Competition</th>
+                            <th>Potential Revenue</th>
+                            <th>Cost</th>
+                            <th>Customer Value</th>
+                            <th>Weighted Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% projects.forEach((project, index)=> { %>
+                            <tr
+                                class="<%= index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : '' %>">
+                                <td style="text-align: center; font-weight: bold;">
+                                    <%= index + 1 %>
+                                        <% if (index===0) { %>🥇<% } else if (index===1) { %>🥈<% } else if (index===2)
+                                                    { %>🥉<% } %>
+                                </td>
+                                <td><strong>
+                                        <%= project.title %>
+                                    </strong></td>
+                                <td>
+                                    <%= project.objective %>
+                                </td>
+                                <td>
+                                    <%= project.scope %>
+                                </td>
+                                <td style="text-align: center;">
+                                    <%= project.duration %>
+                                </td>
+                                <td style="text-align: right;">RM <%= project.budget.toLocaleString() %>
+                                </td>
+                                <td style="text-align: center;">
+                                    <%= project.competition %>/10
+                                </td>
+                                <td style="text-align: center;">
+                                    <%= project.potentialRevenue %>/10
+                                </td>
+                                <td style="text-align: center;">
+                                    <%= project.cost %>/10
+                                </td>
+                                <td style="text-align: center;">
+                                    <%= project.customerValue %>/10
+                                </td>
+                                <td style="text-align: center;">
+                                    <span
+                                        class="score <%= project.score >= 8 ? 'high' : project.score >= 6 ? 'medium' : 'low' %>">
+                                        <%= project.score %>
+                                    </span>
+                                </td>
+                            </tr>
+                            <% }); %>
+                    </tbody>
+                </table>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">📋 Scoring Summary</h3>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                        <div style="text-align: center;">
+                            <strong>Total Projects:</strong>
+                            <%= projects.length %>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong>Highest Score:</strong>
+                            <%= projects[0] ? projects[0].score : 'N/A' %>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong>Lowest Score:</strong>
+                            <%= projects[projects.length - 1] ? projects[projects.length - 1].score : 'N/A' %>
+                        </div>
+                        <div style="text-align: center;">
+                            <strong>Average Score:</strong>
+                            <%= projects.length> 0 ? (projects.reduce((sum, p) => sum + p.score, 0) /
+                                projects.length).toFixed(1) : 'N/A' %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } else { %>
+                <div
+                    style="background: white; padding: 40px; border-radius: 15px; text-align: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);">
+                    <h2 style="color: #7f8c8d; margin-bottom: 20px;">📝 No Projects Found</h2>
+                    <p style="color: #7f8c8d; margin-bottom: 30px;">
+                        You haven't added any projects yet. Start by adding your first project to begin the evaluation
+                        process.
+                    </p>
+                    <a href="/projects/new" style="display: inline-block;">➕ Add Your First Project</a>
+                </div>
+                <% } %>
+    </div>
+
+    <!-- Question 2d-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const rows = document.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                row.addEventListener('mouseenter', function () {
+                    this.style.transform = 'scale(1.02)';
+                    this.style.transition = 'transform 0.2s ease';
+                });
+
+                row.addEventListener('mouseleave', function () {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+
+            // Add click to highlight functionality
+            rows.forEach(row => {
+                row.addEventListener('click', function () {
+                    rows.forEach(r => r.style.boxShadow = '');
+                    this.style.boxShadow = '0 0 20px rgba(52, 152, 219, 0.5)';
+                    const projectTitle = this.querySelector('td:nth-child(2)').textContent;
+                    console.log(`Selected project: ${projectTitle}`);
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
